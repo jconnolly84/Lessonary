@@ -1,12 +1,12 @@
 streamlit
-openai
-python-pptx
-requests
+requests_oauthlib
+oauthlib
 google-auth
 msal
 google-api-python-client
-oauthlib
-requests_oauthlib
+python-pptx
+openai
+requests
 pytube
 Pillow
 python-docx
