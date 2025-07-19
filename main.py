@@ -1,4 +1,3 @@
-
 import streamlit as st
 from auth_utils import (
     get_google_auth_url,
@@ -46,6 +45,7 @@ def handle_callback():
             handle_microsoft_callback(code)
         st.rerun()
 
+# Handle login or callback
 if __name__ == "__main__":
     if 'user' in st.session_state:
         lesson_options()
