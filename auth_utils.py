@@ -24,3 +24,28 @@ def get_microsoft_auth_url():
     ms = OAuth2Session(MS_CLIENT_ID, scope=MS_SCOPE, redirect_uri=MS_REDIRECT_URI)
     auth_url, _ = ms.authorization_url(MS_AUTH_URI, response_mode='query')
     return auth_url
+
+def handle_google_callback(code):
+    google = OAuth2Session(GOOGLE_CLIENT_ID, redirect_uri=GOOGLE_REDIRECT_URI)
+    token = google.fetch_token(
+        'https://oauth2.googleapis.com/token',
+        client_secret=GOOGLE_CLIENT_SECRET,
+        code=code
+    )
+    user_info = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
+    st.session_state['user'] = user_info
+    st.session_state['token'] = token
+    st.session_state['oauth_provider'] = 'google'
+
+def handle_microsoft_callback(code):
+    ms = OAuth2Session(MS_CLIENT_ID, redirect_uri=MS_REDIRECT_URI)
+    token = ms.fetch_token(
+        f'https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/token',
+        client_secret=MS_CLIENT_SECRET,
+        code=code
+    )
+    user_info = ms.get('https://graph.microsoft.com/v1.0/me').json()
+    st.session_state['user'] = user_info
+    st.session_state['token'] = token
+    st.session_state['oauth_provider'] = 'microsoft'
+
