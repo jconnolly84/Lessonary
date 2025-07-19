@@ -16,31 +16,24 @@ def show_login():
 
 def lesson_options():
     st.title("Welcome to Lessonary")
-
     st.write("Choose how you'd like to create your lesson:")
-
     option = st.radio(
         "Select input method:",
         ("Upload PowerPoint file", "Import from Google Drive", "Import from OneDrive", "Enter Key Objective")
     )
-
     if option == "Upload PowerPoint file":
         uploaded_file = st.file_uploader("Upload PPT/PPTX file", type=['ppt', 'pptx'])
         if uploaded_file:
             st.success(f"Uploaded {uploaded_file.name}")
-
     elif option == "Import from Google Drive":
         st.info("Feature for importing from Google Drive coming soon.")
-
     elif option == "Import from OneDrive":
         st.info("Feature for importing from OneDrive coming soon.")
-
     elif option == "Enter Key Objective":
         key_objective = st.text_input("Enter Key Objective")
         if key_objective:
             st.success(f"Creating lesson for objective: {key_objective}")
 
-# OAuth callback handling
 def handle_callback():
     query_params = st.query_params
     if 'code' in query_params:
