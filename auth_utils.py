@@ -1,4 +1,3 @@
-
 import streamlit as st
 from requests_oauthlib import OAuth2Session
 
@@ -18,13 +17,11 @@ MS_SCOPE = ['User.Read']
 def get_google_auth_url():
     google = OAuth2Session(GOOGLE_CLIENT_ID, scope=GOOGLE_SCOPE, redirect_uri=GOOGLE_REDIRECT_URI)
     auth_url, _ = google.authorization_url(GOOGLE_AUTH_URI, access_type='offline', prompt='consent')
-    st.session_state['oauth_provider'] = 'google'
     return auth_url
 
 def get_microsoft_auth_url():
     ms = OAuth2Session(MS_CLIENT_ID, scope=MS_SCOPE, redirect_uri=MS_REDIRECT_URI)
     auth_url, _ = ms.authorization_url(MS_AUTH_URI, response_mode='query')
-    st.session_state['oauth_provider'] = 'microsoft'
     return auth_url
 
 def handle_google_callback(code):
