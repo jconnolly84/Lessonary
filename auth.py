@@ -34,7 +34,7 @@ def authenticate_user():
             st.markdown(f"[Click here to authenticate]({ms_auth_url})")
 
 def handle_google_auth():
-    params = st.experimental_get_query_params()
+    params = st.query_params
     if "code" in params:
         code = params["code"][0]
 
@@ -70,7 +70,7 @@ def handle_google_auth():
             st.exception(e)
 
 def handle_ms_auth():
-    params = st.experimental_get_query_params()
+    params = st.query_params
     if "code" in params:
         code = params["code"][0]
 
