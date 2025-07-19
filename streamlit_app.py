@@ -33,10 +33,10 @@ else:
         st.image("assets/google_logo.png", width=40)
         if st.button("Login with Google"):
             st.session_state['oauth_provider'] = 'google'
-            st.switch_page(get_google_auth_url())
+            st.markdown(f'<meta http-equiv="refresh" content="0; url={get_google_auth_url()}">', unsafe_allow_html=True)
 
     with col2:
         st.image("assets/microsoft_logo.png", width=40)
         if st.button("Login with Microsoft"):
             st.session_state['oauth_provider'] = 'microsoft'
-            st.switch_page(get_microsoft_auth_url())
+            st.markdown(f'<meta http-equiv="refresh" content="0; url={get_microsoft_auth_url()}">', unsafe_allow_html=True)
