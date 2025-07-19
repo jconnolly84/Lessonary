@@ -29,6 +29,12 @@ else:
     st.image("assets/lessonary_logo.png", width=200)
     st.title("Login to Lessonary")
 
+    if st.button("Login with Google"):
+        login_with_google()
+
+    if st.button("Login with Microsoft"):
+        login_with_microsoft()
+
     col1, col2 = st.columns(2)
     with col1:
         st.image("assets/google_logo.png", width=40)
