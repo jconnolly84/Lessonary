@@ -7,6 +7,18 @@ from auth_utils import (
 )
 from lessonary_ui import render_lessonary_ui
 
+# Break out of iframe sandbox (needed for Google/Microsoft auth to work properly)
+st.components.v1.html(
+    """
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location.href;
+        }
+    </script>
+    """,
+    height=0,
+)
+
 st.set_page_config(page_title="Lessonary", page_icon="📘", layout="centered")
 
 handle_callback()
