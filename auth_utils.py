@@ -52,12 +52,20 @@ def handle_microsoft_callback(code):
 def login_with_google():
     st.session_state['auth_provider'] = 'google'
     auth_url = get_google_auth_url()
-    st.markdown(f'<meta http-equiv="refresh" content="0;URL={auth_url}">', unsafe_allow_html=True)
+    st.components.v1.html(f"""
+        <script>
+            window.parent.location.href = '{auth_url}';
+        </script>
+    """, height=0)
 
 def login_with_microsoft():
     st.session_state['auth_provider'] = 'microsoft'
     auth_url = get_microsoft_auth_url()
-    st.markdown(f'<meta http-equiv="refresh" content="0;URL={auth_url}">', unsafe_allow_html=True)
+    st.components.v1.html(f"""
+        <script>
+            window.parent.location.href = '{auth_url}';
+        </script>
+    """, height=0)
 
 def handle_callback():
     query_params = st.query_params
