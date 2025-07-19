@@ -1,15 +1,27 @@
+
 import streamlit as st
-from auth import check_login
+from auth_utils import login_with_google, login_with_microsoft, handle_oauth_callback
 
-check_login()  # Ensure user is logged in
+def show_login():
+    st.title("Login to Lessonary")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Login with Google"):
+            login_with_google()
+    with col2:
+        if st.button("Login with Microsoft"):
+            login_with_microsoft()
 
-st.success(f"✅ Logged in as: {st.session_state.get('login_method', 'user')}")
+def main_dashboard():
+    user = st.session_state.get('user', {})
+    st.write(f"Welcome, {user.get('name', user.get('email', 'User'))}!")
+    # Main Lessonary dashboard here...
 
-st.header("🎯 Choose Your Next Step")
-option = st.radio("What would you like to do?", [
-    "Upload a PowerPoint to uplift",
-    "Import from Google Drive or OneDrive",
-    "Start a lesson from a Key Objective"
-])
-
-st.info(f"You selected: {option}")
+if __name__ == "__main__":
+    if 'user' in st.session_state:
+        main_dashboard()
+    elif 'code' in st.query_params:
+        handle_oauth_callback()
+        st.rerun()
+    else:
+        show_login()
