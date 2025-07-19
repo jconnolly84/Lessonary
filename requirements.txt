@@ -1,10 +1,11 @@
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
 streamlit
 openai
-requests
 python-pptx
-Pillow
-PyPDF2
+requests
+google-auth
 msal
+google-api-python-client
+oauthlib
+pytube
+Pillow
+python-docx
