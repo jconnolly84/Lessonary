@@ -1,28 +1,43 @@
+
 import streamlit as st
 from auth_utils import (
-    login_with_google,
-    login_with_microsoft,
-    handle_callback,
+    get_google_auth_url,
+    get_microsoft_auth_url,
+    handle_google_callback,
+    handle_microsoft_callback,
 )
-from lessonary_ui import show_welcome_ui
+from lessonary_ui import render_lessonary_ui
 
-st.set_page_config(page_title="Lessonary", page_icon="📘", layout="centered")
+st.set_page_config(page_title="Lessonary", page_icon="favicon.png", layout="centered")
+
+def handle_callback():
+    query_params = st.query_params
+    if "code" in query_params:
+        provider = st.session_state.get("oauth_provider", "google")
+        code = query_params["code"]
+        if provider == "google":
+            handle_google_callback(code)
+        elif provider == "microsoft":
+            handle_microsoft_callback(code)
+        st.rerun()
 
 handle_callback()
 
-if "user_info" in st.session_state:
+if "user" in st.session_state:
     render_lessonary_ui()
 else:
-    st.image("assets/lessonary_logo.png", width=200)
+    st.image("LOGO_Lessonary_Enhanced.png", width=200)
     st.title("Login to Lessonary")
-
     col1, col2 = st.columns(2)
     with col1:
-        st.image("assets/google_logo.png", width=40)
+        st.image("google_logo.png", width=40)
         if st.button("Login with Google"):
-            login_with_google()
-
+            st.session_state['oauth_provider'] = 'google'
+            auth_url = get_google_auth_url()
+            st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
     with col2:
-        st.image("assets/microsoft_logo.png", width=40)
+        st.image("microsoft_logo.png", width=40)
         if st.button("Login with Microsoft"):
-            login_with_microsoft()
+            st.session_state['oauth_provider'] = 'microsoft'
+            auth_url = get_microsoft_auth_url()
+            st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
