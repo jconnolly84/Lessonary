@@ -1,12 +1,13 @@
 
 import streamlit as st
-from auth import check_login
+from auth_real_oauth import check_login
 
 check_login()
 
-st.success(f"✅ Logged in as: {st.session_state['user']}")
+st.success("✅ You are logged in!")
 
 st.title("🎯 Choose Your Next Step")
+
 option = st.radio("What would you like to do?", [
     "Upload a PowerPoint to uplift",
     "Import from Google Drive or OneDrive",
