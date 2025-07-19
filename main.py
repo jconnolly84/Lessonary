@@ -1,17 +1,15 @@
-
 import streamlit as st
 from auth import check_login
 
-def main():
-    st.title("🎯 Choose Your Next Step")
+check_login()  # Ensure user is logged in
 
-    choice = st.radio("What would you like to do?", [
-        "Upload a PowerPoint to uplift",
-        "Import from Google Drive or OneDrive",
-        "Start a lesson from a Key Objective"
-    ])
+st.success(f"✅ Logged in as: {st.session_state.get('login_method', 'user')}")
 
-    st.info(f"You selected: {choice}")
+st.header("🎯 Choose Your Next Step")
+option = st.radio("What would you like to do?", [
+    "Upload a PowerPoint to uplift",
+    "Import from Google Drive or OneDrive",
+    "Start a lesson from a Key Objective"
+])
 
-check_login()
-main()
+st.info(f"You selected: {option}")
