@@ -1,46 +1,29 @@
 
-import toml
+import os
 import streamlit as st
-import urllib.parse
 
-# Load secrets manually from /etc/secrets/secrets.toml
-secrets = toml.load("/etc/secrets/secrets.toml")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
-GOOGLE_CLIENT_ID = secrets["google_oauth_client_id"]
-GOOGLE_CLIENT_SECRET = secrets["google_oauth_client_secret"]
-GOOGLE_REDIRECT_URI = secrets["google_oauth_redirect_uri"]
-
-MS_CLIENT_ID = secrets["ms_client_id"]
-MS_CLIENT_SECRET = secrets["ms_client_secret"]
-MS_TENANT_ID = secrets["ms_tenant_id"]
-MS_REDIRECT_URI = secrets["ms_redirect_uri"]
-
-OPENAI_API_KEY = secrets["OPENAI_API_KEY"]
-PIXABAY_API_KEY = secrets["PIXABAY_API_KEY"]
-PEXELS_API_KEY = secrets["PEXELS_API_KEY"]
-GOOGLE_API_KEY = secrets["google_api_key"]
-GOOGLE_CSE_ID = secrets["google_cse_id"]
+MS_CLIENT_ID = os.getenv("MS_CLIENT_ID")
+MS_CLIENT_SECRET = os.getenv("MS_CLIENT_SECRET")
+MS_TENANT_ID = os.getenv("MS_TENANT_ID")
+MS_REDIRECT_URI = os.getenv("MS_REDIRECT_URI")
 
 def login_with_google():
     auth_url = (
-        f"https://accounts.google.com/o/oauth2/auth"
-        f"?response_type=code"
-        f"&client_id={GOOGLE_CLIENT_ID}"
-        f"&redirect_uri={urllib.parse.quote(GOOGLE_REDIRECT_URI, safe='')}"
-        f"&scope=openid email profile"
-        f"&access_type=offline"
-        f"&prompt=consent"
+        "https://accounts.google.com/o/oauth2/auth?"
+        f"response_type=code&client_id={GOOGLE_CLIENT_ID}"
+        f"&redirect_uri={GOOGLE_REDIRECT_URI}"
+        "&scope=openid email profile&access_type=offline&prompt=consent"
     )
-    st.markdown(f"[Click here to login with Google]({auth_url})", unsafe_allow_html=True)
+    st.markdown(f"[Click here to login with Google]({auth_url})")
 
 def login_with_microsoft():
     auth_url = (
-        f"https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize"
-        f"?client_id={MS_CLIENT_ID}"
-        f"&response_type=code"
-        f"&redirect_uri={urllib.parse.quote(MS_REDIRECT_URI, safe='')}"
-        f"&response_mode=query"
-        f"&scope=openid email profile offline_access"
-        f"&prompt=select_account"
+        f"https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize?"
+        f"client_id={MS_CLIENT_ID}&response_type=code&redirect_uri={MS_REDIRECT_URI}"
+        "&response_mode=query&scope=openid email profile offline_access&prompt=select_account"
     )
-    st.markdown(f"[Click here to login with Microsoft]({auth_url})", unsafe_allow_html=True)
+    st.markdown(f"[Click here to login with Microsoft]({auth_url})")
