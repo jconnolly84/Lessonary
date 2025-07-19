@@ -1,78 +1,32 @@
 
-import os
 import streamlit as st
-from requests_oauthlib import OAuth2Session
+import webbrowser
 
-GOOGLE_CLIENT_ID = os.environ["GOOGLE_OAUTH_CLIENT_ID"]
-GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_OAUTH_CLIENT_SECRET"]
-GOOGLE_REDIRECT_URI = os.environ.get("GOOGLE_OAUTH_REDIRECT_URI", "https://less-onary.streamlit.app")
-GOOGLE_AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
-GOOGLE_SCOPE = ['openid', 'email', 'profile']
+try:
+    GOOGLE_CLIENT_ID = st.secrets["google_oauth_client_id"]
+    GOOGLE_CLIENT_SECRET = st.secrets["google_oauth_client_secret"]
+    GOOGLE_REDIRECT_URI = st.secrets["google_oauth_redirect_uri"]
+except Exception as e:
+    st.error(f"❌ Google secrets missing: {e}")
 
-MS_CLIENT_ID = os.environ["MS_CLIENT_ID"]
-MS_CLIENT_SECRET = os.environ["MS_CLIENT_SECRET"]
-MS_TENANT_ID = os.environ["MS_TENANT_ID"]
-MS_REDIRECT_URI = os.environ.get("MS_REDIRECT_URI", "https://less-onary.streamlit.app")
-MS_AUTH_URI = f'https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize'
-MS_SCOPE = ['User.Read']
-
-def get_google_auth_url():
-    google = OAuth2Session(GOOGLE_CLIENT_ID, scope=GOOGLE_SCOPE, redirect_uri=GOOGLE_REDIRECT_URI)
-    auth_url, _ = google.authorization_url(GOOGLE_AUTH_URI, access_type='offline', prompt='consent')
-    return auth_url
-
-def get_microsoft_auth_url():
-    ms = OAuth2Session(MS_CLIENT_ID, scope=MS_SCOPE, redirect_uri=MS_REDIRECT_URI)
-    auth_url, _ = ms.authorization_url(MS_AUTH_URI, response_mode='query')
-    return auth_url
-
-def handle_google_callback(code):
-    google = OAuth2Session(GOOGLE_CLIENT_ID, redirect_uri=GOOGLE_REDIRECT_URI)
-    token = google.fetch_token(
-        'https://oauth2.googleapis.com/token',
-        client_secret=GOOGLE_CLIENT_SECRET,
-        code=code
-    )
-    user_info = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
-    st.session_state['user_info'] = user_info
-    st.session_state['token'] = token
-    st.session_state['auth_provider'] = 'google'
-
-def handle_microsoft_callback(code):
-    ms = OAuth2Session(MS_CLIENT_ID, redirect_uri=MS_REDIRECT_URI)
-    token = ms.fetch_token(
-        f'https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/token',
-        client_secret=MS_CLIENT_SECRET,
-        code=code
-    )
-    user_info = ms.get('https://graph.microsoft.com/v1.0/me').json()
-    st.session_state['user_info'] = user_info
-    st.session_state['token'] = token
-    st.session_state['auth_provider'] = 'microsoft'
+try:
+    MS_CLIENT_ID = st.secrets["ms_client_id"]
+    MS_CLIENT_SECRET = st.secrets["ms_client_secret"]
+    MS_TENANT_ID = st.secrets["ms_tenant_id"]
+    MS_REDIRECT_URI = st.secrets["ms_redirect_uri"]
+except Exception as e:
+    st.error(f"❌ Microsoft secrets missing: {e}")
 
 def login_with_google():
-    st.session_state['auth_provider'] = 'google'
-    auth_url = get_google_auth_url()
-    st.components.v1.html(f"""
-        <script>
-            window.parent.location.href = '{auth_url}';
-        </script>
-    """, height=0)
+    auth_url = f"https://accounts.google.com/o/oauth2/auth?response_type=code&client_id={GOOGLE_CLIENT_ID}&redirect_uri={GOOGLE_REDIRECT_URI}&scope=openid email profile&access_type=offline&prompt=consent"
+    webbrowser.open(auth_url)
 
 def login_with_microsoft():
-    st.session_state['auth_provider'] = 'microsoft'
-    auth_url = get_microsoft_auth_url()
-    st.components.v1.html(f"""
-        <script>
-            window.parent.location.href = '{auth_url}';
-        </script>
-    """, height=0)
+    auth_url = f"https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize?client_id={MS_CLIENT_ID}&response_type=code&redirect_uri={MS_REDIRECT_URI}&response_mode=query&scope=openid email profile offline_access&prompt=select_account"
+    webbrowser.open(auth_url)
 
-def handle_callback():
-    query_params = st.query_params
-    if 'code' in query_params:
-        code = query_params['code'][0]
-        if st.session_state.get('auth_provider') == 'google':
-            handle_google_callback(code)
-        elif st.session_state.get('auth_provider') == 'microsoft':
-            handle_microsoft_callback(code)
+def handle_google_auth_callback():
+    st.caption("🔁 Google callback handled")
+
+def handle_microsoft_auth_callback():
+    st.caption("🔁 Microsoft callback handled")
