@@ -1,27 +1,28 @@
-
 import streamlit as st
-from auth_utils import login_with_google, login_with_microsoft
+from auth_utils import (
+    get_google_login_url,
+    get_microsoft_login_url,
+    handle_google_auth_callback,
+    handle_microsoft_auth_callback
+)
 
-st.set_page_config(page_title="Lessonary Login", page_icon="favicon.png")
+st.set_page_config(
+    page_title="Lessonary",
+    page_icon="favicon.png"
+)
 
-st.image("LOGO_Lessonary_WhiteBG.png", width=200)
+st.image("assets/lessonary_logo.png", width=200)
 st.title("Login to Lessonary")
 
-login_method = st.radio("Select login method", ["google", "microsoft"], horizontal=True, label_visibility="collapsed")
+col1, col2 = st.columns(2)
 
-if login_method == "google":
-    google_url = login_with_google()
-    st.markdown(
-        f'''
-        <a href="{google_url}">
-            <button style="background-color:#DB4437;color:white;border:none;padding:10px 20px;border-radius:5px;font-size:16px;">
-                🔴 Login with Google
-            </button>
-        </a>
-        ''',
-        unsafe_allow_html=True
-    )
+with col1:
+    if st.button("🔴 Login with Google"):
+        st.experimental_redirect(get_google_login_url())
 
-elif login_method == "microsoft":
+with col2:
     if st.button("🔵 Login with Microsoft"):
-        login_with_microsoft()
+        st.experimental_redirect(get_microsoft_login_url())
+
+handle_google_auth_callback()
+handle_microsoft_auth_callback()
