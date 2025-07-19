@@ -1,17 +1,18 @@
 
+import os
 import streamlit as st
 from requests_oauthlib import OAuth2Session
 
-GOOGLE_CLIENT_ID = st.secrets["google_oauth_client_id"]
-GOOGLE_CLIENT_SECRET = st.secrets["google_oauth_client_secret"]
-GOOGLE_REDIRECT_URI = "https://less-onary.streamlit.app"
+GOOGLE_CLIENT_ID = os.environ["GOOGLE_OAUTH_CLIENT_ID"]
+GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_OAUTH_CLIENT_SECRET"]
+GOOGLE_REDIRECT_URI = os.environ.get("GOOGLE_OAUTH_REDIRECT_URI", "https://less-onary.streamlit.app")
 GOOGLE_AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
 GOOGLE_SCOPE = ['openid', 'email', 'profile']
 
-MS_CLIENT_ID = st.secrets["ms_client_id"]
-MS_CLIENT_SECRET = st.secrets["ms_client_secret"]
-MS_TENANT_ID = st.secrets["ms_tenant_id"]
-MS_REDIRECT_URI = GOOGLE_REDIRECT_URI
+MS_CLIENT_ID = os.environ["MS_CLIENT_ID"]
+MS_CLIENT_SECRET = os.environ["MS_CLIENT_SECRET"]
+MS_TENANT_ID = os.environ["MS_TENANT_ID"]
+MS_REDIRECT_URI = os.environ.get("MS_REDIRECT_URI", "https://less-onary.streamlit.app")
 MS_AUTH_URI = f'https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize'
 MS_SCOPE = ['User.Read']
 
