@@ -4,7 +4,7 @@ from requests_oauthlib import OAuth2Session
 
 GOOGLE_CLIENT_ID = st.secrets["google_oauth_client_id"]
 GOOGLE_CLIENT_SECRET = st.secrets["google_oauth_client_secret"]
-GOOGLE_REDIRECT_URI = "https://less-onary.streamlit.app/main"
+GOOGLE_REDIRECT_URI = "https://less-onary.streamlit.app"
 GOOGLE_AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
 GOOGLE_SCOPE = ['openid', 'email', 'profile']
 
