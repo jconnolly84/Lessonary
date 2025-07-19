@@ -1,47 +1,26 @@
 import os
-from urllib.parse import urlencode
-
-# Environment variables
-GOOGLE_CLIENT_ID = os.environ.get("google_oauth_client_id", "")
-GOOGLE_CLIENT_SECRET = os.environ.get("google_oauth_client_secret", "")
-GOOGLE_REDIRECT_URI = os.environ.get("google_oauth_redirect_uri", "")
-MS_CLIENT_ID = os.environ.get("ms_client_id", "")
-MS_CLIENT_SECRET = os.environ.get("ms_client_secret", "")
-MS_TENANT_ID = os.environ.get("ms_tenant_id", "")
-MS_REDIRECT_URI = os.environ.get("ms_redirect_uri", "")
 
 def get_google_login_url():
+    client_id = os.environ.get("google_oauth_client_id")
+    redirect_uri = os.environ.get("google_oauth_redirect_uri")
+    scope = "openid email profile"
     return (
-        "https://accounts.google.com/o/oauth2/auth?"
-        + urlencode({
-            "response_type": "code",
-            "client_id": GOOGLE_CLIENT_ID,
-            "redirect_uri": GOOGLE_REDIRECT_URI,
-            "scope": "openid email profile",
-            "access_type": "offline",
-            "prompt": "consent"
-        })
+        f"https://accounts.google.com/o/oauth2/auth"
+        f"?response_type=code&client_id={client_id}"
+        f"&redirect_uri={redirect_uri}"
+        f"&scope={scope}&access_type=offline&prompt=consent"
     )
 
-def get_microsoft_login_url():
+def get_ms_login_url():
+    client_id = os.environ.get("ms_client_id")
+    tenant_id = os.environ.get("ms_tenant_id")
+    redirect_uri = os.environ.get("ms_redirect_uri")
+    scope = "openid email profile offline_access"
     return (
-        f"https://login.microsoftonline.com/{MS_TENANT_ID}/oauth2/v2.0/authorize?"
-        + urlencode({
-            "client_id": MS_CLIENT_ID,
-            "response_type": "code",
-            "redirect_uri": MS_REDIRECT_URI,
-            "response_mode": "query",
-            "scope": "openid email profile offline_access",
-            "prompt": "select_account"
-        })
+        f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize"
+        f"?client_id={client_id}"
+        f"&response_type=code"
+        f"&redirect_uri={redirect_uri}"
+        f"&response_mode=query"
+        f"&scope={scope}&prompt=select_account"
     )
-
-def handle_google_auth_callback():
-    import streamlit as st
-    if "code" in st.query_params:
-        st.success("Google login successful! (Simulated)")
-
-def handle_microsoft_auth_callback():
-    import streamlit as st
-    if "code" in st.query_params:
-        st.success("Microsoft login successful! (Simulated)")

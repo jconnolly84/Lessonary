@@ -1,28 +1,24 @@
 import streamlit as st
-from auth_utils import (
-    get_google_login_url,
-    get_microsoft_login_url,
-    handle_google_auth_callback,
-    handle_microsoft_auth_callback
-)
+from auth_utils import get_google_login_url, get_ms_login_url
 
-st.set_page_config(
-    page_title="Lessonary",
-    page_icon="favicon.png"
-)
-
+st.set_page_config(page_title="Lessonary Login", page_icon="📘")
 st.image("assets/lessonary_logo.png", width=200)
 st.title("Login to Lessonary")
 
-col1, col2 = st.columns(2)
+# Capture which button was pressed and perform redirect using HTML
+if "redirect" not in st.session_state:
+    st.session_state["redirect"] = None
 
-with col1:
-    if st.button("🔴 Login with Google"):
-        st.experimental_redirect(get_google_login_url())
+if st.button("Login with Google"):
+    st.session_state["redirect"] = get_google_login_url()
 
-with col2:
-    if st.button("🔵 Login with Microsoft"):
-        st.experimental_redirect(get_microsoft_login_url())
+if st.button("Login with Microsoft"):
+    st.session_state["redirect"] = get_ms_login_url()
 
-handle_google_auth_callback()
-handle_microsoft_auth_callback()
+# Trigger redirect with HTML if redirect URL is set
+if st.session_state["redirect"]:
+    redirect_script = f"""
+    <meta http-equiv="refresh" content="0; url={st.session_state['redirect']}" />
+    If you are not redirected, <a href="{st.session_state['redirect']}">click here</a>.
+    """
+    st.markdown(redirect_script, unsafe_allow_html=True)
