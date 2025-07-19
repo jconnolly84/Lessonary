@@ -1,3 +1,4 @@
+
 import streamlit as st
 from requests_oauthlib import OAuth2Session
 
@@ -32,9 +33,9 @@ def handle_google_callback(code):
         code=code
     )
     user_info = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
-    st.session_state['user'] = user_info
+    st.session_state['user_info'] = user_info
     st.session_state['token'] = token
-    st.session_state['oauth_provider'] = 'google'
+    st.session_state['auth_provider'] = 'google'
 
 def handle_microsoft_callback(code):
     ms = OAuth2Session(MS_CLIENT_ID, redirect_uri=MS_REDIRECT_URI)
@@ -44,6 +45,27 @@ def handle_microsoft_callback(code):
         code=code
     )
     user_info = ms.get('https://graph.microsoft.com/v1.0/me').json()
-    st.session_state['user'] = user_info
+    st.session_state['user_info'] = user_info
     st.session_state['token'] = token
-    st.session_state['oauth_provider'] = 'microsoft'
+    st.session_state['auth_provider'] = 'microsoft'
+
+def login_with_google():
+    st.session_state['auth_provider'] = 'google'
+    auth_url = get_google_auth_url()
+    st.session_state['auth_url'] = auth_url
+    st.experimental_rerun()
+
+def login_with_microsoft():
+    st.session_state['auth_provider'] = 'microsoft'
+    auth_url = get_microsoft_auth_url()
+    st.session_state['auth_url'] = auth_url
+    st.experimental_rerun()
+
+def handle_callback():
+    query_params = st.experimental_get_query_params()
+    if 'code' in query_params:
+        code = query_params['code'][0]
+        if st.session_state.get('auth_provider') == 'google':
+            handle_google_callback(code)
+        elif st.session_state.get('auth_provider') == 'microsoft':
+            handle_microsoft_callback(code)

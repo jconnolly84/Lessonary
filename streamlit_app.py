@@ -1,10 +1,11 @@
+
 import streamlit as st
 from auth_utils import (
     login_with_google,
     login_with_microsoft,
     handle_callback,
 )
-from lessonary_ui import show_welcome_ui
+from lessonary_ui import render_lessonary_ui
 
 st.set_page_config(page_title="Lessonary", page_icon="📘", layout="centered")
 
