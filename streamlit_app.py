@@ -17,6 +17,7 @@ def show_login():
 
 def lesson_options():
     st.title("Welcome to Lessonary")
+    st.write("👤 Logged in user:", st.session_state.get('user'))
     st.write("Choose how you'd like to create your lesson:")
     option = st.radio(
         "Select input method:",
@@ -36,15 +37,27 @@ def lesson_options():
             st.success(f"Creating lesson for objective: {key_objective}")
 
 def handle_callback():
+    st.write("🔁 Handling OAuth callback...")  # Debug indicator
     query_params = st.query_params
+    st.write("Query Params:", query_params)  # Show full query
+
     if 'code' in query_params:
-        provider = st.session_state.get('oauth_provider')
+        provider = st.session_state.get('oauth_provider', 'google')
         code = query_params['code']
+        st.write(f"Provider: {provider}")
+        st.write(f"Code: {code}")
+
         if provider == 'google':
             handle_google_callback(code)
         elif provider == 'microsoft':
             handle_microsoft_callback(code)
+        else:
+            st.error("Unknown provider.")
+
+        st.success("✅ Login callback complete. Reloading app...")
         st.rerun()
+    else:
+        st.error("❌ No code found in query parameters.")
 
 if __name__ == "__main__":
     if 'user' in st.session_state:
