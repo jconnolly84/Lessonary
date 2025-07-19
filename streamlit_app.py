@@ -7,7 +7,7 @@ from auth_utils import (
 )
 from lessonary_ui import render_lessonary_ui
 
-st.set_page_config(page_title="Lessonary", page_icon="favicon.png", layout="centered")
+st.set_page_config(page_title="Lessonary", page_icon="📘", layout="centered")
 
 def handle_callback():
     query_params = st.query_params
@@ -25,20 +25,18 @@ handle_callback()
 if "user" in st.session_state:
     render_lessonary_ui()
 else:
-    st.image("LOGO_Lessonary_Enhanced.png", width=200)
+    st.image("assets/lessonary_logo.png", width=200)
     st.title("Login to Lessonary")
+
     col1, col2 = st.columns(2)
     with col1:
-        st.image("google_logo.png", width=40)
+        st.image("assets/google_logo.png", width=40)
         if st.button("Login with Google"):
             st.session_state['oauth_provider'] = 'google'
-            auth_url = get_google_auth_url()
-            st.write("Google Auth URL:", auth_url)  # Debug print
-            st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
+            st.switch_page(get_google_auth_url())
+
     with col2:
-        st.image("microsoft_logo.png", width=40)
+        st.image("assets/microsoft_logo.png", width=40)
         if st.button("Login with Microsoft"):
             st.session_state['oauth_provider'] = 'microsoft'
-            auth_url = get_microsoft_auth_url()
-            st.write("Microsoft Auth URL:", auth_url)  # Debug print
-            st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
+            st.switch_page(get_microsoft_auth_url())
