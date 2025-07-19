@@ -53,16 +53,16 @@ def login_with_google():
     st.session_state['auth_provider'] = 'google'
     auth_url = get_google_auth_url()
     st.session_state['auth_url'] = auth_url
-    st.experimental_rerun()
+    st.rerun()
 
 def login_with_microsoft():
     st.session_state['auth_provider'] = 'microsoft'
     auth_url = get_microsoft_auth_url()
     st.session_state['auth_url'] = auth_url
-    st.experimental_rerun()
+    st.rerun()
 
 def handle_callback():
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params
     if 'code' in query_params:
         code = query_params['code'][0]
         if st.session_state.get('auth_provider') == 'google':
