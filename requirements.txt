@@ -6,6 +6,8 @@ google-auth
 msal
 google-api-python-client
 oauthlib
+requests_oauthlib
 pytube
 Pillow
 python-docx
+python-dotenv
