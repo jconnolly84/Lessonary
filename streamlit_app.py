@@ -1,24 +1,28 @@
-
 import streamlit as st
 from auth_utils import (
     login_with_google,
     login_with_microsoft,
-    handle_google_auth_callback,
-    handle_microsoft_auth_callback
+    handle_callback,
 )
+from lessonary_ui import show_welcome_ui
 
-# Always show the login screen for testing
-st.image("assets/lessonary_logo.png", width=200)
-st.title("Login to Lessonary")
+st.set_page_config(page_title="Lessonary", page_icon="📘", layout="centered")
 
-if st.button("Login with Google", key="login_google"):
-    login_with_google()
-    st.rerun()
+handle_callback()
 
-if st.button("Login with Microsoft", key="login_microsoft"):
-    login_with_microsoft()
-    st.rerun()
+if "user_info" in st.session_state:
+    render_lessonary_ui()
+else:
+    st.image("assets/lessonary_logo.png", width=200)
+    st.title("Login to Lessonary")
 
-# Callback handler (if redirected back with code)
-handle_google_auth_callback()
-handle_microsoft_auth_callback()
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image("assets/google_logo.png", width=40)
+        if st.button("Login with Google"):
+            login_with_google()
+
+    with col2:
+        st.image("assets/microsoft_logo.png", width=40)
+        if st.button("Login with Microsoft"):
+            login_with_microsoft()
