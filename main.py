@@ -1,7 +1,7 @@
 import streamlit as st
 from auth_utils import (
-    get_google_auth_url, 
-    get_microsoft_auth_url, 
+    get_google_auth_url,
+    get_microsoft_auth_url,
     handle_google_callback,
     handle_microsoft_callback
 )
@@ -27,38 +27,35 @@ def lesson_options():
     if option == "Upload PowerPoint file":
         uploaded_file = st.file_uploader("Upload PPT/PPTX file", type=['ppt', 'pptx'])
         if uploaded_file:
-            st.write(f"Uploaded {uploaded_file.name}")
-            # Process file here
-            
+            st.success(f"Uploaded {uploaded_file.name}")
+
     elif option == "Import from Google Drive":
-        st.write("Importing from Google Drive...")
-        # Google Drive integration code here
-    
+        st.info("Feature for importing from Google Drive coming soon.")
+
     elif option == "Import from OneDrive":
-        st.write("Importing from OneDrive...")
-        # OneDrive integration code here
-    
+        st.info("Feature for importing from OneDrive coming soon.")
+
     elif option == "Enter Key Objective":
         key_objective = st.text_input("Enter Key Objective")
         if key_objective:
-            st.write(f"Creating lesson for objective: {key_objective}")
-            # Generate lesson from Key Objective
+            st.success(f"Creating lesson for objective: {key_objective}")
 
-# Main OAuth callback handling
-if __name__ == "__main__":
+# OAuth callback handling
+def handle_callback():
     query_params = st.query_params
-    
     if 'code' in query_params:
-        # Determine OAuth provider from session or state
-        provider = st.session_state.get('oauth_provider', 'google')  # default to Google if not set
-        
+        provider = st.session_state.get('oauth_provider')
+        code = query_params['code']
         if provider == 'google':
-            handle_google_callback(query_params['code'])
+            handle_google_callback(code)
         elif provider == 'microsoft':
-            handle_microsoft_callback(query_params['code'])
+            handle_microsoft_callback(code)
         st.rerun()
 
-    elif 'user' in st.session_state:
+if __name__ == "__main__":
+    if 'user' in st.session_state:
         lesson_options()
+    elif 'code' in st.query_params:
+        handle_callback()
     else:
         show_login()
