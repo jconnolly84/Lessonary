@@ -11,11 +11,11 @@ from auth_utils import (
 st.image("assets/lessonary_logo.png", width=200)
 st.title("Login to Lessonary")
 
-if st.button("Login with Google"):
+if st.button("Login with Google", key="login_google"):
     login_with_google()
     st.experimental_rerun()
 
-if st.button("Login with Microsoft"):
+if st.button("Login with Microsoft", key="login_microsoft"):
     login_with_microsoft()
     st.experimental_rerun()
 
