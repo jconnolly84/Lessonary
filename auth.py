@@ -1,3 +1,4 @@
+
 import streamlit as st
 import requests
 from google.oauth2 import id_token
@@ -5,69 +6,35 @@ from google.auth.transport import requests as google_requests
 from msal import ConfidentialClientApplication
 
 def authenticate_user():
-    st.markdown("""
-    <style>
-    .login-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        margin: 10px 10px 20px 0;
-        border: none;
-        border-radius: 6px;
-        background-color: #ffffff;
-        font-size: 16px;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        cursor: pointer;
-        text-decoration: none;
-    }
-    .login-button:hover {
-        background-color: #f0f0f0;
-    }
-    .login-logo {
-        height: 20px;
-        width: 20px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown("### 🔐 Login to Lessonary")
+    st.title("🔐 Login to Lessonary")
     st.markdown("Choose a login method to continue.")
-
+    
     col1, col2 = st.columns(2)
-
     with col1:
-        google_auth_url = (
-            "https://accounts.google.com/o/oauth2/v2/auth"
-            "?response_type=code"
-            f"&client_id={st.secrets['google_oauth_client_id']}"
-            f"&redirect_uri={st.secrets['google_oauth_redirect_uri']}"
-            "&scope=email profile openid https://www.googleapis.com/auth/drive.file"
-        )
-        st.markdown(f"""
-            <a class='login-button' href='{google_auth_url}'>
-                <img src='google_logo.png' class='login-logo'/> Sign in with Google
-            </a>
-        """, unsafe_allow_html=True)
+        if st.button("Login with Google"):
+            google_auth_url = (
+                "https://accounts.google.com/o/oauth2/v2/auth"
+                "?response_type=code"
+                f"&client_id={st.secrets['google_oauth_client_id']}"
+                f"&redirect_uri={st.secrets['google_oauth_redirect_uri']}"
+                "&scope=email profile openid https://www.googleapis.com/auth/drive.file"
+            )
+            st.markdown(f"[Click here to authenticate]({google_auth_url})")
 
     with col2:
-        ms_auth_url = (
-            "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
-            f"?client_id={st.secrets['ms_client_id']}"
-            f"&response_type=code"
-            f"&redirect_uri={st.secrets['ms_redirect_uri']}"
-            f"&response_mode=query"
-            f"&scope=openid profile User.Read Files.ReadWrite.All"
-        )
-        st.markdown(f"""
-            <a class='login-button' href='{ms_auth_url}'>
-                <img src='microsoft_logo.png' class='login-logo'/> Sign in with Microsoft
-            </a>
-        """, unsafe_allow_html=True)
+        if st.button("Login with Microsoft"):
+            ms_auth_url = (
+                f"https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+                f"?client_id={st.secrets['ms_client_id']}"
+                f"&response_type=code"
+                f"&redirect_uri={st.secrets['ms_redirect_uri']}"
+                f"&response_mode=query"
+                f"&scope=openid profile User.Read Files.ReadWrite.All"
+            )
+            st.markdown(f"[Click here to authenticate]({ms_auth_url})")
 
 def handle_google_auth():
-    params = st.query_params
+    params = st.experimental_get_query_params()
     if "code" in params:
         code = params["code"][0]
 
@@ -103,7 +70,7 @@ def handle_google_auth():
             st.exception(e)
 
 def handle_ms_auth():
-    params = st.query_params
+    params = st.experimental_get_query_params()
     if "code" in params:
         code = params["code"][0]
 
