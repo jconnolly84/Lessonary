@@ -1,4 +1,3 @@
-
 import streamlit as st
 from auth_utils import (
     get_google_auth_url,
@@ -34,10 +33,12 @@ else:
         if st.button("Login with Google"):
             st.session_state['oauth_provider'] = 'google'
             auth_url = get_google_auth_url()
+            st.write("Google Auth URL:", auth_url)  # Debug print
             st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
     with col2:
         st.image("microsoft_logo.png", width=40)
         if st.button("Login with Microsoft"):
             st.session_state['oauth_provider'] = 'microsoft'
             auth_url = get_microsoft_auth_url()
+            st.write("Microsoft Auth URL:", auth_url)  # Debug print
             st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'/>", unsafe_allow_html=True)
